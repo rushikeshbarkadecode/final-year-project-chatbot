@@ -9,14 +9,11 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv
+from langchain_community.vectorstores import FAISS
 
 load_dotenv()
 os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-
-
-
-
 
 
 def get_pdf_text(pdf_docs):
@@ -61,11 +58,10 @@ def get_conversational_chain():
     return chain
 
 
-
 def user_input(user_question):
     embeddings = GoogleGenerativeAIEmbeddings(model = "models/embedding-001")
     
-    new_db = FAISS.load_local("faiss_index", embeddings)
+    new_db = FAISS.load_local("faiss_index", embeddings,allow_dangerous_deserialization=True)
     docs = new_db.similarity_search(user_question)
 
     chain = get_conversational_chain()
@@ -79,11 +75,9 @@ def user_input(user_question):
     st.write("Reply: ", response["output_text"])
 
 
-
-
 def main():
     st.set_page_config("Chat PDF")
-    st.header("Chat with PDF using LLM💁")
+    st.header("Ask me anything about Coal mining")
 
     user_question = st.text_input("Ask a Question from the PDF Files")
 
@@ -99,7 +93,6 @@ def main():
                 text_chunks = get_text_chunks(raw_text)
                 get_vector_store(text_chunks)
                 st.success("Done")
-
 
 
 if __name__ == "__main__":
