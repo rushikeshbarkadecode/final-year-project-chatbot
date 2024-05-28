@@ -25,7 +25,6 @@ def get_pdf_text(pdf_docs):
     return  text
 
 
-
 def get_text_chunks(text):
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=10000, chunk_overlap=1000)
     chunks = text_splitter.split_text(text)
@@ -42,7 +41,7 @@ def get_conversational_chain():
 
     prompt_template = """
     Answer the question as detailed as possible from the provided context, make sure to provide all the details, if the answer is not in
-    provided context just say, "answer is not available in the context", don't provide the wrong answer\n\n
+    provided context just say, "Answer is not available in the PDF", don't provide the wrong answer\n\n
     Context:\n {context}?\n
     Question: \n{question}\n
 
